@@ -3,9 +3,9 @@ Kewpie is a Go package implementing a generic, dynamic, and efficient First-In-F
 
 ## Features
 * Generic Implementation: Works with any data type.
-* Dynamic Resizing: Automatically resises based on the queue's current size, ensuring efficient use of memory.
-* Ring Buffer: Minimises the overhead of enqueueing and dequeueing operations.
-* Error Handling: Provides clear error messages for operations that cannot be completed.
+* Dynamic Resizing: Like Go maps or slices, queue data automatically resizes based on the queue's current size, ensuring efficient use of memory.
+* Ring Buffer: Minimises the overhead of enqueueing and dequeueing operations because it just increments a pointer.
+* Error Handling: Provides clear error messages for operations that cannot be completed. There are only a couple things that can go wrong anyway, and they mainly should only happen if your system is out of memory.
 
 ![kewpie](https://github.com/mips171/kewpie/assets/18670565/c48e43a5-927a-4dea-82d8-85589989ff37)
 
