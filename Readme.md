@@ -1,4 +1,7 @@
 # Kewpie Queue Library
+
+[Chinese/中文](Readme_zh.md)
+
 Kewpie is a Go package implementing a generic, dynamic, and efficient First-In-First-Out (FIFO) queue data structure using a ring buffer. This implementation allows for enqueueing and dequeueing with amortised constant time complexity, making it suitable for various applications including breadth-first search algorithms, event processing systems, and more.
 
 ## Features
