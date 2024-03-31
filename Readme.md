@@ -19,7 +19,7 @@ go get -u github.com/mips171/kewpie
 
 ## Usage
 
-Here's a simple example demonstrating how to use the Kewpie queue:
+Here's a simple example demonstrating how to use the Kewpie queue to queeue some integers.
 
 ```go
 package main
@@ -69,6 +69,8 @@ Queue is empty: kewpie: queue is empty
 ```
 
 # Kewpie in BFS
+
+Now let's use Kewpie to queue a custom TreeNode type:
 
 ```go
 package main
