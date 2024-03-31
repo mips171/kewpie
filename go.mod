@@ -1,4 +1,4 @@
-module kewpie
+module github.com/mips171/kewpie
 
 go 1.22.1
 
