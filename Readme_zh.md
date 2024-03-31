@@ -21,7 +21,7 @@ Kewpie 是一个 Go 包，实现了一个通用、动态且高效的先进先出
 go get -u github.com/mips171/kewpie
 ```
 
-## Usage
+## 使用方法
 
 这里有一个简单的示例，演示如何使用 Kewpie 队列来排队一些整数。
 
