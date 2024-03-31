@@ -26,38 +26,38 @@ Here's a simple example demonstrating how to use the Kewpie queue to queeue some
 package main
 
 import (
-	"fmt"
-	"github.com/mips171/kewpie"
+    "fmt"
+    "github.com/mips171/kewpie"
 )
 
 func main() {
-	// Create a new queue of integers with an initial capacity of 10.
+    // Create a new queue of integers with an initial capacity of 10.
     // Note: the 10 is optional. If unspecified kewpie will default to a size of 1.
-	queue := kewpie.NewQueue[int](10)
+    queue := kewpie.NewQueue[int](10)
 
-	// Enqueue some elements.
-	queue.Enqueue(1)
-	queue.Enqueue(2)
-	queue.Enqueue(3)
+    // Enqueue some elements.
+    queue.Enqueue(1)
+    queue.Enqueue(2)
+    queue.Enqueue(3)
 
-	// Peek at the front element.
-	front, err := queue.Peek()
-	if err != nil {
-		fmt.Println("Error peeking at the queue:", err)
-		return
-	}
-	fmt.Println("The front element is:", front)
+    // Peek at the front element.
+    front, err := queue.Peek()
+    if err != nil {
+        fmt.Println("Error peeking at the queue:", err)
+        return
+    }
+    fmt.Println("The front element is:", front)
 
-	// Dequeue and print elements.
-	for {
-		element, err := queue.Dequeue()
-		if err != nil {
-			// If we encounter an error, it means the queue is empty.
-			fmt.Println("Queue is empty:", err)
-			break
-		}
-		fmt.Println("Dequeued:", element)
-	}
+    // Dequeue and print elements.
+    for {
+        element, err := queue.Dequeue()
+        if err != nil {
+            // If we encounter an error, it means the queue is empty.
+            fmt.Println("Queue is empty:", err)
+            break
+        }
+        fmt.Println("Dequeued:", element)
+    }
 }
 ```
 Output:
