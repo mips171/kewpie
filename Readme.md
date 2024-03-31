@@ -134,7 +134,7 @@ func main() {
     }
     
     fmt.Println("BFS traversal of the tree:")
-    bfs(root)
+    bfs(root) // [1 2 3 4 5 6]
 }
 ```
 
