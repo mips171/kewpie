@@ -71,7 +71,7 @@ Queue is empty: kewpie: queue is empty
 
 # Kewpie in BFS
 
-Now let's use Kewpie to queue a custom TreeNode type:
+Now let's use Kewpie to queue a custom TreeNode type for a Breadth-First Search:
 
 ```go
 package main
