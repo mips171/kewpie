@@ -23,7 +23,7 @@ go get -u github.com/mips171/kewpie
 
 ## Usage
 
-Here's a simple example demonstrating how to use the Kewpie queue to queeue some integers.
+这里有一个简单的示例，演示如何使用 Kewpie 队列来排队一些整数。
 
 ```go
 package main
