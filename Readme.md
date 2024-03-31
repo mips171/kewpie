@@ -8,6 +8,7 @@ Kewpie is a Go package implementing a generic, dynamic, and efficient First-In-F
 * Error Handling: Provides clear error messages for operations that cannot be completed. There are only a couple things that can go wrong anyway, and they mainly should only happen if your system is out of memory.
 
 ![kewpie](https://github.com/mips171/kewpie/assets/18670565/c48e43a5-927a-4dea-82d8-85589989ff37)
+
 *Sushi queueing up*
 
 ## Installation
