@@ -28,7 +28,8 @@ import (
 
 func main() {
 	// Create a new queue of integers with an initial capacity of 10.
-	queue := kewpie.NewQueue 
+    // Note: the 10 is optional. If unspecified kewpie will default to a size of 1.
+	queue := kewpie.NewQueue[int](10)
 
 	// Enqueue some elements.
 	queue.Enqueue(1)
@@ -132,7 +133,7 @@ func main() {
 ```
 
 # Contributing
-Contributions to the Kewpie queue are welcome! Please submit issues and pull requests via GitHub, and ensure your code follows the Go coding standards.
+Contributions are welcome! Please submit issues and pull requests via GitHub, and ensure your code follows the Go coding standards.
 
 # License
 Kewpie is released under the MIT License. See the LICENSE file for more details.

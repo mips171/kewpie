@@ -1,7 +1,6 @@
 package kewpie_test
 
 import (
-	"fmt"
 	"kewpie"
 	"testing"
 
@@ -138,6 +137,6 @@ func TestBFS(t *testing.T) {
 			queue.Enqueue(node.Right)
 		}
 	}
-	fmt.Println(resultOrder)
+	// [1 2 3 4 5 6]
 	assert.Equal(t, expectedOrder, resultOrder, "The BFS traversal order did not match the expected order.")
 }
