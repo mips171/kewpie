@@ -7,7 +7,7 @@ Kewpie is a Go package implementing a generic, dynamic, and efficient First-In-F
 * Ring Buffer: Minimises the overhead of enqueueing and dequeueing operations.
 * Error Handling: Provides clear error messages for operations that cannot be completed.
 
-![kewpie](https://github.com/mips171/kewpie/assets/18670565/26db6f43-8fed-4d2f-b31f-11dc707ed08c)
+![kewpie](https://github.com/mips171/kewpie/assets/18670565/26db6f43-8fed-4d2f-b31f-11dc707ed08c width=50)
 
 
 ## Installation
