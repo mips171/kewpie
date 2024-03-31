@@ -1,8 +1,9 @@
 package kewpie_test
 
 import (
-	"kewpie"
 	"testing"
+
+	"github.com/mips171/kewpie"
 
 	"github.com/stretchr/testify/assert"
 )

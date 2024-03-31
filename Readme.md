@@ -138,6 +138,18 @@ func main() {
 }
 ```
 
+## Benchmarks
+
+```sh
+goos: darwin
+goarch: arm64
+pkg: github.com/mips171/kewpie
+BenchmarkEnqueue-10     176774624                6.216 ns/op          24 B/op          0 allocs/op
+BenchmarkDequeue-10     68080922                17.43 ns/op           15 B/op          0 allocs/op
+PASS
+ok      github.com/mips171/kewpie       20.812s
+```
+
 # Contributing
 Contributions are welcome! Please submit issues and pull requests via GitHub, and ensure your code follows the Go coding standards.
 
