@@ -141,6 +141,12 @@ func main() {
 ## Benchmarks
 
 ```sh
+go test -bench=. github.com/mips171/kewpie -benchmem
+```
+
+Output:
+
+```sh
 goos: darwin
 goarch: arm64
 pkg: github.com/mips171/kewpie
