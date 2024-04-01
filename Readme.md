@@ -141,6 +141,54 @@ func main() {
 }
 ```
 
+## Batch Operations
+This function is ideal for larger queues, somewhere beyond 10K and 100K items at a time, increasing efficiency by minimising the number of resize operations needed. It checks if the queue's current capacity can accommodate the additional items and doubles the capacity until it is sufficient. This approach significantly reduces the overhead associated with adding multiple elements to the queue one by one, especially when dealing with large numbers of elements.
+
+```go
+package main
+
+import (
+    "fmt"
+    "github.com/mips171/kewpie"
+)
+
+type Message struct {
+    ID   string
+    Text string
+}
+
+func main() {
+    // Initialize a queue for Messages.
+    queue := kewpie.NewQueue[Message]()
+
+    // Define a batch of messages to enqueue.
+    messagesToEnqueue := []Message{
+        {ID: "1", Text: "Hello"},
+        {ID: "2", Text: "World"},
+        {ID: "3", Text: "How are you?"},
+    }
+
+    // Enqueue the batch of messages.
+    queue.EnqueueBatch(messagesToEnqueue)
+    
+    fmt.Println("Enqueued messages")
+
+    // Specify the batch size for dequeueing.
+    batchSize := 2
+
+    // Dequeue a batch of messages.
+    messagesDequeued, err := queue.DequeueBatch(batchSize)
+    if err != nil {
+        fmt.Println("Error dequeuing messages:", err)
+        return
+    }
+
+    for _, msg := range messagesDequeued {
+        fmt.Printf("Dequeued Message ID: %s, Text: %s\n", msg.ID, msg.Text)
+    }
+}
+```
+
 ## Benchmarks
 
 ```sh

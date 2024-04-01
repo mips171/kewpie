@@ -142,12 +142,16 @@ func main() {
 }
 ```
 
+## 
+
+
 ## 基准测试
 
 ```sh
 go test -bench=. github.com/mips171/kewpie  -benchmem -benchtime=100x
 ```
 此输出表明，当使用大批量大小（介于 10,000 和 100,000 之间）时，使用具有适当批量大小的函数的 Batch 版本（EnqueueBatch/DequeueBatch）会更有效，以减少 Go 所需的分配数量。
+
 输出：
 
 ```sh
