@@ -88,18 +88,31 @@ func (q *Queue[T]) Dequeue() (T, error) {
 }
 
 // DequeueBatch dequeues messages up to the specified batchSize.
-func (q *Queue[Message]) DequeueBatch(batchSize int) ([]Message, error) {
-	var batch []Message
-	for i := 0; i < batchSize; i++ {
-		if q.size == 0 {
-			break
-		}
-		msg, err := q.Dequeue()
-		if err != nil {
-			return nil, err
-		}
-		batch = append(batch, msg)
+func (q *Queue[T]) DequeueBatch(batchSize int) ([]T, error) {
+	if batchSize <= 0 {
+		return nil, errors.New("kewpie: invalid batch size")
 	}
+
+	if q.size == 0 {
+		return nil, nil
+	}
+
+	actualBatchSize := min(batchSize, q.size)
+	batch := make([]T, actualBatchSize)
+
+	var zero T
+
+	for i := 0; i < actualBatchSize; i++ {
+		batch[i] = q.data[q.head]
+		q.data[q.head] = zero
+		q.head = (q.head + 1) % len(q.data)
+	}
+	q.size -= actualBatchSize
+
+	if len(q.data) > 1 && q.size <= len(q.data)/4 {
+		q.resize(len(q.data) / 2)
+	}
+
 	return batch, nil
 }
 

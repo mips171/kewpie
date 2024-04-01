@@ -202,44 +202,40 @@ Output:
 goos: darwin
 goarch: arm64
 pkg: github.com/mips171/kewpie
-BenchmarkDequeue1-10                 100               110.1 ns/op             0 B/op          0 allocs/op
-BenchmarkDequeue10-10                100               940.0 ns/op           128 B/op          4 allocs/op
-BenchmarkDequeue100-10               100              2998 ns/op            1024 B/op          7 allocs/op
-BenchmarkDequeue1000-10              100             11769 ns/op            8192 B/op         10 allocs/op
-BenchmarkDequeue10000-10             100             82939 ns/op          131074 B/op         14 allocs/op
-BenchmarkDequeue100000-10            100            582988 ns/op         1048579 B/op         17 allocs/op
-BenchmarkDequeue1000000-10           100           5343473 ns/op         8388608 B/op         20 allocs/op
-BenchmarkEnqueue1-10                 100               172.9 ns/op            20 B/op          0 allocs/op
-BenchmarkEnqueue10-10                100               208.4 ns/op           163 B/op          0 allocs/op
-BenchmarkEnqueue100-10               100               974.2 ns/op          2621 B/op          0 allocs/op
-BenchmarkEnqueue1000-10              100              7812 ns/op           20971 B/op          0 allocs/op
-BenchmarkEnqueue10000-10             100             67582 ns/op          167775 B/op          0 allocs/op
-BenchmarkEnqueue100000-10            100            779382 ns/op         2684354 B/op          0 allocs/op
-BenchmarkEnqueue1000000-10           100           6926040 ns/op        21474838 B/op          0 allocs/op
-BenchmarkEnqueueMessages/1-10        100               864.2 ns/op           258 B/op          2 allocs/op
-BenchmarkEnqueueMessages/10-10       100              6680 ns/op            2310 B/op         20 allocs/op
-BenchmarkEnqueueMessages/100-10                      100             64748 ns/op           28576 B/op        200 allocs/op
-BenchmarkEnqueueMessages/1000-10                     100            673420 ns/op          253876 B/op       2000 allocs/op
-BenchmarkEnqueueMessages/10000-10                    100           6548411 ns/op         2286715 B/op      20000 allocs/op
-BenchmarkEnqueueMessages/100000-10                   100          66954072 ns/op        28906175 B/op     200000 allocs/op
-BenchmarkEnqueueMessages/1000000-10                  100         821247701 ns/op        256849066 B/op   2000000 allocs/op
-BenchmarkDequeueMessages/1-10                        100               682.1 ns/op           126 B/op          1 allocs/op
-BenchmarkDequeueMessages/10-10                       100             15450 ns/op            3539 B/op         27 allocs/op
-BenchmarkDequeueMessages/100-10                      100            148808 ns/op           32237 B/op        211 allocs/op
-BenchmarkDequeueMessages/1000-10                     100            807242 ns/op          282730 B/op       1999 allocs/op
-BenchmarkDequeueMessages/10000-10                    100           6874234 ns/op         3620356 B/op      19828 allocs/op
-BenchmarkDequeueMessages/100000-10                   100          67830701 ns/op        31430091 B/op     198034 allocs/op
-BenchmarkDequeueMessages/1000000-10                  100         671253912 ns/op        276717879 B/op   1980040 allocs/op
-BenchmarkEnqueueBatch/BatchSize10-10                 100               107.1 ns/op          1024 B/op          0 allocs/op
-BenchmarkEnqueueBatch/BatchSize100-10                100              1022 ns/op           15710 B/op          0 allocs/op
-BenchmarkEnqueueBatch/BatchSize1000-10               100             30048 ns/op          125337 B/op          0 allocs/op
-BenchmarkEnqueueBatch/BatchSize10000-10              100            298482 ns/op          998769 B/op          0 allocs/op
-BenchmarkDequeueBatch/BatchSize10-10                 100           6044221 ns/op        22456293 B/op      50017 allocs/op
-BenchmarkDequeueBatch/BatchSize100-10                100           4779223 ns/op        21992290 B/op       8017 allocs/op
-BenchmarkDequeueBatch/BatchSize1000-10               100           3067474 ns/op        18515481 B/op       1117 allocs/op
-BenchmarkDequeueBatch/BatchSize10000-10              100           5025982 ns/op        29554694 B/op        207 allocs/op
+BenchmarkDequeue1-10                 100               103.0 ns/op             0 B/op          0 allocs/op
+BenchmarkDequeue10-10                100               983.3 ns/op           128 B/op          4 allocs/op
+BenchmarkDequeue100-10               100              1959 ns/op            1024 B/op          7 allocs/op
+BenchmarkDequeue1000-10              100             11058 ns/op            8192 B/op         10 allocs/op
+BenchmarkDequeue10000-10             100             88383 ns/op          131074 B/op         14 allocs/op
+BenchmarkEnqueue1-10                 100               139.6 ns/op            20 B/op          0 allocs/op
+BenchmarkEnqueue10-10                100               177.1 ns/op           163 B/op          0 allocs/op
+BenchmarkEnqueue100-10               100               915.9 ns/op          2621 B/op          0 allocs/op
+BenchmarkEnqueue1000-10              100              8073 ns/op           20971 B/op          0 allocs/op
+BenchmarkEnqueue10000-10             100             75846 ns/op          167773 B/op          0 allocs/op
+BenchmarkEnqueueMessages/1-10        100               912.9 ns/op           258 B/op          2 allocs/op
+BenchmarkEnqueueMessages/10-10       100              7733 ns/op            2310 B/op         20 allocs/op
+BenchmarkEnqueueMessages/100-10                      100             67778 ns/op           28576 B/op        200 allocs/op
+BenchmarkEnqueueMessages/1000-10                     100            662272 ns/op          253876 B/op       2000 allocs/op
+BenchmarkEnqueueMessages/10000-10                    100           6698946 ns/op         2286749 B/op      20000 allocs/op
+BenchmarkDequeueMessages/1-10                        100               806.2 ns/op           126 B/op          1 allocs/op
+BenchmarkDequeueMessages/10-10                       100              7211 ns/op            3539 B/op         27 allocs/op
+BenchmarkDequeueMessages/100-10                      100             66341 ns/op           32237 B/op        211 allocs/op
+BenchmarkDequeueMessages/1000-10                     100            651548 ns/op          282732 B/op       1999 allocs/op
+BenchmarkDequeueMessages/10000-10                    100           6671030 ns/op         3620320 B/op      19828 allocs/op
+BenchmarkEnqueueBatch/BatchSize10-10                 100               115.8 ns/op          1024 B/op          0 allocs/op
+BenchmarkEnqueueBatch/BatchSize100-10                100               897.1 ns/op         15710 B/op          0 allocs/op
+BenchmarkEnqueueBatch/BatchSize1000-10               100             31023 ns/op          125337 B/op          0 allocs/op
+BenchmarkEnqueueBatch/BatchSize10000-10              100            292337 ns/op          998803 B/op          0 allocs/op
+BenchmarkEnqueueBatch/BatchSize100000-10                     100           3284543 ns/op        16043213 B/op          0 allocs/op
+BenchmarkEnqueueBatch/BatchSize1000000-10                    100          26368697 ns/op        128345702 B/op         0 allocs/op
+BenchmarkDequeueBatch/BatchSize10-10                         100          93716526 ns/op        1285310464 B/op  1000020 allocs/op
+BenchmarkDequeueBatch/BatchSize100-10                        100          70284867 ns/op        1291704576 B/op   100017 allocs/op
+BenchmarkDequeueBatch/BatchSize1000-10                       100          66622307 ns/op        1296777216 B/op    10014 allocs/op
+BenchmarkDequeueBatch/BatchSize10000-10                      100          61337613 ns/op        1287847936 B/op     1010 allocs/op
+BenchmarkDequeueBatch/BatchSize100000-10                     100          60451120 ns/op        1279066112 B/op      107 allocs/op
+BenchmarkDequeueBatch/BatchSize1000000-10                    100          57964251 ns/op        1235025920 B/op       14 allocs/op
 PASS
-ok      github.com/mips171/kewpie       175.586s
+ok      github.com/mips171/kewpie       114.039s
 ```
 
 # Contributing

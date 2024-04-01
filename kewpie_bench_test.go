@@ -58,16 +58,6 @@ func BenchmarkDequeue10000(b *testing.B) {
 	benchmarkDequeue(b, queue, 10000)
 }
 
-func BenchmarkDequeue100000(b *testing.B) {
-	queue := kewpie.NewQueue[int]()
-	benchmarkDequeue(b, queue, 100000)
-}
-
-func BenchmarkDequeue1000000(b *testing.B) {
-	queue := kewpie.NewQueue[int]()
-	benchmarkDequeue(b, queue, 1000000)
-}
-
 func BenchmarkEnqueue1(b *testing.B) {
 	queue := kewpie.NewQueue[int]()
 	benchmarkEnqueue(b, queue, 1)
@@ -92,19 +82,9 @@ func BenchmarkEnqueue10000(b *testing.B) {
 	benchmarkEnqueue(b, queue, 10000)
 }
 
-func BenchmarkEnqueue100000(b *testing.B) {
-	queue := kewpie.NewQueue[int]()
-	benchmarkEnqueue(b, queue, 100000)
-}
-
-func BenchmarkEnqueue1000000(b *testing.B) {
-	queue := kewpie.NewQueue[int]()
-	benchmarkEnqueue(b, queue, 1000000)
-}
-
 // BenchmarkEnqueueMessages benchmarks the enqueue operation with varying numbers of messages.
 func BenchmarkEnqueueMessages(b *testing.B) {
-	sizes := []int{1, 10, 100, 1000, 10000, 100000, 1000000}
+	sizes := []int{1, 10, 100, 1000, 10000}
 	for _, size := range sizes {
 		b.Run(fmt.Sprintf("%d", size), func(b *testing.B) {
 			queue := kewpie.NewQueue[Message]()
@@ -122,7 +102,7 @@ func BenchmarkEnqueueMessages(b *testing.B) {
 
 // BenchmarkDequeueMessages benchmarks the dequeue operation with varying numbers of messages.
 func BenchmarkDequeueMessages(b *testing.B) {
-	sizes := []int{1, 10, 100, 1000, 10000, 100000, 1000000}
+	sizes := []int{1, 10, 100, 1000, 10000}
 	for _, size := range sizes {
 		b.Run(fmt.Sprintf("%d", size), func(b *testing.B) {
 			queue := kewpie.NewQueue[Message]() // Initialize the queue for Message structs
@@ -155,11 +135,10 @@ func BenchmarkDequeueMessages(b *testing.B) {
 }
 
 func BenchmarkEnqueueBatch(b *testing.B) {
-	batchSizes := []int{10, 100, 1000, 10000, 100000}
+	batchSizes := []int{10, 100, 1000, 10000, 100000, 1000000}
 
 	for _, batchSize := range batchSizes {
 		b.Run(fmt.Sprintf("BatchSize%d", batchSize), func(b *testing.B) {
-
 			q := kewpie.NewQueue[Message]()
 
 			batch := make([]Message, batchSize)
@@ -176,28 +155,33 @@ func BenchmarkEnqueueBatch(b *testing.B) {
 }
 
 func BenchmarkDequeueBatch(b *testing.B) {
-	batchSizes := []int{10, 100, 1000, 10000, 100000}
-	queueSize := 1000000
+	batchSizes := []int{10, 100, 1000, 10000, 100000, 1000000}
+	queueSize := 10000000
 
 	for _, batchSize := range batchSizes {
 		b.Run(fmt.Sprintf("BatchSize%d", batchSize), func(b *testing.B) {
-
 			q := kewpie.NewQueue[Message]()
-			for i := 0; i < queueSize; i++ {
-				q.Enqueue(Message{ID: int64(i), Content: fmt.Sprintf("Message %d", i)})
+
+			// Pre-fill the queue efficiently
+			preFillBatch := make([]Message, queueSize)
+			for i := range preFillBatch {
+				preFillBatch[i] = Message{ID: int64(i), Content: fmt.Sprintf("Message %d", i)}
 			}
+			q.EnqueueBatch(preFillBatch)
+
+			dequeueIterations := queueSize / batchSize
 
 			b.ResetTimer()
 			for i := 0; i < b.N; i++ {
-				// Ensure the loop has enough iterations to deplete the queue
-				for j := 0; j < queueSize/batchSize; j++ {
+				for j := 0; j < dequeueIterations; j++ {
 					q.DequeueBatch(batchSize)
 				}
-				// Since the queue is depleted, reset it for the next iteration
+
 				b.StopTimer()
-				for i := 0; i < queueSize; i++ {
-					q.Enqueue(Message{ID: int64(i), Content: fmt.Sprintf("Message %d", i)})
-				}
+
+				q = kewpie.NewQueue[Message]()
+
+				q.EnqueueBatch(preFillBatch)
 				b.StartTimer()
 			}
 		})
