@@ -25,27 +25,27 @@ func NewQueue[T any](sizes ...int) *Queue[T] {
 	return &Queue[T]{data: make([]T, size), head: 0, tail: 0, size: 0}
 }
 
-// Enqueue adds an element of type T to the end of the queue.
+// Enqueue adds an element of type T to the end of the q.
 // TODO add soft limit (percentage) before resize is triggreed.
 // TODO If resize fails after soft limit, then go into degraded perf mode and warn.
-func (queue *Queue[T]) Enqueue(data T) {
-	if queue.size == len(queue.data) {
-		queue.resize(len(queue.data) * 2) // Double the size when full like a normal Go slice or map
+func (q *Queue[T]) Enqueue(data T) {
+	if q.size == len(q.data) {
+		q.resize(len(q.data) * 2) // Double the size when full like a normal Go slice or map
 	}
-	queue.data[queue.tail] = data
-	queue.tail = (queue.tail + 1) % len(queue.data)
-	queue.size++
+	q.data[q.tail] = data
+	q.tail = (q.tail + 1) % len(q.data)
+	q.size++
 }
 
 // EnqueueBatch adds multiple elements of type T to the end of the queue, minimising number of resize operations.
-func (queue *Queue[T]) EnqueueBatch(items []T) {
+func (q *Queue[T]) EnqueueBatch(items []T) {
 	batchSize := len(items)
 	if batchSize == 0 {
 		return
 	}
 
-	requiredCapacity := queue.size + batchSize
-	currentCapacity := len(queue.data)
+	requiredCapacity := q.size + batchSize
+	currentCapacity := len(q.data)
 
 	// Check if resizing is necessary
 	if requiredCapacity > currentCapacity {
@@ -55,33 +55,33 @@ func (queue *Queue[T]) EnqueueBatch(items []T) {
 			newCapacity *= 2
 		}
 
-		queue.resize(newCapacity)
+		q.resize(newCapacity)
 	}
 
 	for _, item := range items {
-		queue.data[queue.tail] = item
-		queue.tail = (queue.tail + 1) % len(queue.data) // Ensure the tail wraps around correctly
-		queue.size++
+		q.data[q.tail] = item
+		q.tail = (q.tail + 1) % len(q.data) // Ensure the tail wraps around correctly
+		q.size++
 	}
 }
 
-// Dequeue removes and returns the element at the front of the queue.
+// Dequeue removes and returns the element at the front of the q.
 // It returns an error if the queue is empty.
-func (queue *Queue[T]) Dequeue() (T, error) {
-	if queue.size == 0 {
+func (q *Queue[T]) Dequeue() (T, error) {
+	if q.size == 0 {
 		var zero T
 		return zero, errors.New("kewpie: queue is empty")
 	}
 
-	element := queue.data[queue.head]
+	element := q.data[q.head]
 	var zero T
-	queue.data[queue.head] = zero // Clearing the reference to avoid memory leak from stale struct
-	queue.head = (queue.head + 1) % len(queue.data)
-	queue.size--
+	q.data[q.head] = zero // Clearing the reference to avoid memory leak from stale struct
+	q.head = (q.head + 1) % len(q.data)
+	q.size--
 
 	// shrink queue size if too large for current needs
-	if len(queue.data) > 1 && queue.size <= len(queue.data)/4 {
-		queue.resize(len(queue.data) / 2)
+	if len(q.data) > 1 && q.size <= len(q.data)/4 {
+		q.resize(len(q.data) / 2)
 	}
 
 	return element, nil
@@ -105,22 +105,22 @@ func (q *Queue[Message]) DequeueBatch(batchSize int) ([]Message, error) {
 
 // Peek returns the element at the front of the queue without removing it.
 // It returns an error if the queue is empty.
-func (queue *Queue[T]) Peek() (T, error) {
-	if queue.size == 0 {
+func (q *Queue[T]) Peek() (T, error) {
+	if q.size == 0 {
 		var zero T
 		return zero, errors.New("kewpie: queue is empty")
 	}
-	return queue.data[queue.head], nil
+	return q.data[q.head], nil
 }
 
 // Returns the queue's size
 // Mostly just for the stress test
-func (queue *Queue[T]) Size() int {
-	return queue.size
+func (q *Queue[T]) Size() int {
+	return q.size
 }
 
 // Resize changes the size of the queue's data slice prioritising data integrity.
-func (queue *Queue[T]) resize(newCapacity int) {
+func (q *Queue[T]) resize(newCapacity int) {
 	// Attempt to allocate a new slice with the new capacity.
 	// Use a defer-recover mechanism to catch any panic (e.g., out of memory).
 	defer func() {
@@ -131,18 +131,18 @@ func (queue *Queue[T]) resize(newCapacity int) {
 	}()
 
 	// Safety check on the capacity before copying the data
-	if newCapacity <= queue.size {
-		newCapacity = max(queue.size, 1)
+	if newCapacity <= q.size {
+		newCapacity = max(q.size, 1)
 	}
 
 	newData := make([]T, newCapacity)
-	for i := 0; i < queue.size; i++ {
-		newData[i] = queue.data[(queue.head+i)%len(queue.data)]
+	for i := 0; i < q.size; i++ {
+		newData[i] = q.data[(q.head+i)%len(q.data)]
 	}
 
-	queue.data = newData
-	queue.head = 0
-	queue.tail = queue.size
+	q.data = newData
+	q.head = 0
+	q.tail = q.size
 }
 
 func max(a, b int) int {
