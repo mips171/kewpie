@@ -2,7 +2,6 @@ package kewpie
 
 import (
 	"errors"
-	"log"
 )
 
 // Queue represents a generic FIFO (first in, first out) queue using a ring buffer.
@@ -38,6 +37,34 @@ func (queue *Queue[T]) Enqueue(data T) {
 	queue.size++
 }
 
+// EnqueueBatch adds multiple elements of type T to the end of the queue, minimising number of resize operations.
+func (queue *Queue[T]) EnqueueBatch(items []T) {
+	batchSize := len(items)
+	if batchSize == 0 {
+		return
+	}
+
+	requiredCapacity := queue.size + batchSize
+	currentCapacity := len(queue.data)
+
+	// Check if resizing is necessary
+	if requiredCapacity > currentCapacity {
+		newCapacity := currentCapacity
+		// double the capacity until it can fit the new items
+		for newCapacity < requiredCapacity {
+			newCapacity *= 2
+		}
+
+		queue.resize(newCapacity)
+	}
+
+	for _, item := range items {
+		queue.data[queue.tail] = item
+		queue.tail = (queue.tail + 1) % len(queue.data) // Ensure the tail wraps around correctly
+		queue.size++
+	}
+}
+
 // Dequeue removes and returns the element at the front of the queue.
 // It returns an error if the queue is empty.
 func (queue *Queue[T]) Dequeue() (T, error) {
@@ -58,6 +85,22 @@ func (queue *Queue[T]) Dequeue() (T, error) {
 	}
 
 	return element, nil
+}
+
+// DequeueBatch dequeues messages up to the specified batchSize.
+func (q *Queue[Message]) DequeueBatch(batchSize int) ([]Message, error) {
+	var batch []Message
+	for i := 0; i < batchSize; i++ {
+		if q.size == 0 {
+			break
+		}
+		msg, err := q.Dequeue()
+		if err != nil {
+			return nil, err
+		}
+		batch = append(batch, msg)
+	}
+	return batch, nil
 }
 
 // Peek returns the element at the front of the queue without removing it.
@@ -83,9 +126,6 @@ func (queue *Queue[T]) resize(newCapacity int) {
 	defer func() {
 		if err := recover(); err != nil {
 			// If we're here, allocation failed. Don't proceed with resizing.
-			// The operation is aborted but the existing data in the queue remains intact.
-			log.Printf("kewpie: failed to resize the queue: %v", err)
-			log.Printf("kewpie: the resize operation was aborted but the existing data in the queue remains intact")
 			return
 		}
 	}()

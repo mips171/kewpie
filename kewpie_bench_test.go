@@ -1,28 +1,231 @@
-package kewpie
+package kewpie_test
 
 import (
+	"fmt"
+	"math/rand"
 	"testing"
+	"time"
+
+	"github.com/mips171/kewpie"
 )
 
-// BenchmarkEnqueue measures the performance of the Enqueue operation.
-func BenchmarkEnqueue(b *testing.B) {
-	queue := NewQueue[int]()
-	for n := 0; n < b.N; n++ {
-		queue.Enqueue(n)
+func benchmarkEnqueue(b *testing.B, queue *kewpie.Queue[int], size int) {
+	for i := 0; i < b.N; i++ {
+		b.StopTimer()
+
+		b.StartTimer()
+		for n := 0; n < size; n++ {
+			queue.Enqueue(n)
+		}
 	}
 }
 
-// BenchmarkDequeue measures the performance of the Dequeue operation.
-// This fills the queue first to ensure dequeue has work to do.
-func BenchmarkDequeue(b *testing.B) {
-	queue := NewQueue[int]()
-	// Pre-fill the queue with a known quantity of elements to dequeue
-	for n := 0; n < 10000; n++ {
-		queue.Enqueue(n)
+func benchmarkDequeue(b *testing.B, queue *kewpie.Queue[int], size int) {
+	for i := 0; i < b.N; i++ {
+		b.StopTimer()
+		for n := 0; n < size; n++ {
+			queue.Enqueue(n)
+		}
+		b.StartTimer()
+		for n := 0; n < size; n++ {
+			queue.Dequeue()
+		}
 	}
-	b.ResetTimer() // Start timing after setup
+}
 
-	for n := 0; n < b.N; n++ {
-		queue.Dequeue()
+func BenchmarkDequeue1(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkDequeue(b, queue, 1)
+}
+
+func BenchmarkDequeue10(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkDequeue(b, queue, 10)
+}
+
+func BenchmarkDequeue100(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkDequeue(b, queue, 100)
+}
+
+func BenchmarkDequeue1000(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkDequeue(b, queue, 1000)
+}
+
+func BenchmarkDequeue10000(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkDequeue(b, queue, 10000)
+}
+
+func BenchmarkDequeue100000(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkDequeue(b, queue, 100000)
+}
+
+func BenchmarkDequeue1000000(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkDequeue(b, queue, 1000000)
+}
+
+func BenchmarkEnqueue1(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkEnqueue(b, queue, 1)
+}
+
+func BenchmarkEnqueue10(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkEnqueue(b, queue, 10)
+}
+func BenchmarkEnqueue100(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkEnqueue(b, queue, 100)
+}
+
+func BenchmarkEnqueue1000(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkEnqueue(b, queue, 1000)
+}
+
+func BenchmarkEnqueue10000(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkEnqueue(b, queue, 10000)
+}
+
+func BenchmarkEnqueue100000(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkEnqueue(b, queue, 100000)
+}
+
+func BenchmarkEnqueue1000000(b *testing.B) {
+	queue := kewpie.NewQueue[int]()
+	benchmarkEnqueue(b, queue, 1000000)
+}
+
+// BenchmarkEnqueueMessages benchmarks the enqueue operation with varying numbers of messages.
+func BenchmarkEnqueueMessages(b *testing.B) {
+	sizes := []int{1, 10, 100, 1000, 10000, 100000, 1000000}
+	for _, size := range sizes {
+		b.Run(fmt.Sprintf("%d", size), func(b *testing.B) {
+			queue := kewpie.NewQueue[Message]()
+			rand.Seed(time.Now().UnixNano())
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for n := 0; n < size; n++ {
+					msg := generateRandomMessage()
+					queue.Enqueue(msg)
+				}
+			}
+		})
 	}
+}
+
+// BenchmarkDequeueMessages benchmarks the dequeue operation with varying numbers of messages.
+func BenchmarkDequeueMessages(b *testing.B) {
+	sizes := []int{1, 10, 100, 1000, 10000, 100000, 1000000}
+	for _, size := range sizes {
+		b.Run(fmt.Sprintf("%d", size), func(b *testing.B) {
+			queue := kewpie.NewQueue[Message]() // Initialize the queue for Message structs
+			rand.Seed(time.Now().UnixNano())    // Seed the random number generator
+
+			// Pre-fill the queue with the required number of messages outside the b.N loop to ensure it doesn't affect benchmark timing
+			for n := 0; n < size; n++ {
+				msg := generateRandomMessage()
+				queue.Enqueue(msg)
+			}
+
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				for n := 0; n < size; n++ {
+					_, err := queue.Dequeue()
+					if err != nil {
+						b.Fatalf("Dequeue failed: %v", err)
+					}
+				}
+
+				// Re-fill the queue after timing to ensure it's ready for the next iteration
+				if i < b.N-1 {
+					for n := 0; n < size; n++ {
+						queue.Enqueue(generateRandomMessage())
+					}
+				}
+			}
+		})
+	}
+}
+
+func BenchmarkEnqueueBatch(b *testing.B) {
+	batchSizes := []int{10, 100, 1000, 10000, 100000}
+
+	for _, batchSize := range batchSizes {
+		b.Run(fmt.Sprintf("BatchSize%d", batchSize), func(b *testing.B) {
+
+			q := kewpie.NewQueue[Message]()
+
+			batch := make([]Message, batchSize)
+			for i := range batch {
+				batch[i] = Message{ID: int64(i), Content: fmt.Sprintf("Message %d", i)}
+			}
+
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				q.EnqueueBatch(batch)
+			}
+		})
+	}
+}
+
+func BenchmarkDequeueBatch(b *testing.B) {
+	batchSizes := []int{10, 100, 1000, 10000, 100000}
+	queueSize := 1000000
+
+	for _, batchSize := range batchSizes {
+		b.Run(fmt.Sprintf("BatchSize%d", batchSize), func(b *testing.B) {
+
+			q := kewpie.NewQueue[Message]()
+			for i := 0; i < queueSize; i++ {
+				q.Enqueue(Message{ID: int64(i), Content: fmt.Sprintf("Message %d", i)})
+			}
+
+			b.ResetTimer()
+			for i := 0; i < b.N; i++ {
+				// Ensure the loop has enough iterations to deplete the queue
+				for j := 0; j < queueSize/batchSize; j++ {
+					q.DequeueBatch(batchSize)
+				}
+				// Since the queue is depleted, reset it for the next iteration
+				b.StopTimer()
+				for i := 0; i < queueSize; i++ {
+					q.Enqueue(Message{ID: int64(i), Content: fmt.Sprintf("Message %d", i)})
+				}
+				b.StartTimer()
+			}
+		})
+	}
+}
+
+// Message represents a message in the queue with random data.
+type Message struct {
+	ID      int64
+	Content string
+	Time    time.Time
+}
+
+// generateRandomMessage generates a random Message instance.
+func generateRandomMessage() Message {
+	return Message{
+		ID:      rand.Int63(),
+		Content: generateRandomString(50),
+		Time:    time.Now(),
+	}
+}
+
+// generateRandomString generates a random string of a given length.
+func generateRandomString(length int) string {
+	const charset = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789"
+	b := make([]byte, length)
+	for i := range b {
+		b[i] = charset[rand.Intn(len(charset))]
+	}
+	return string(b)
 }

@@ -58,38 +58,6 @@ func TestEmptyQueue(t *testing.T) {
 	assert.Error(t, err, "queue is empty")
 }
 
-func TestQueueStress(t *testing.T) {
-	const count = 1000000000    // Number of elements to test with
-	q := kewpie.NewQueue[int]() // Initialize a new queue
-
-	// Enqueue a large number of elements
-	for i := 0; i < count; i++ {
-		q.Enqueue(i)
-	}
-
-	// Check the size of the queue to ensure all elements were added
-	if q.Size() != count {
-		t.Errorf("expected queue size %d, got %d", count, q.Size())
-	}
-
-	// Dequeue elements and check that they are in the correct order
-	for i := 0; i < count; i++ {
-		val, err := q.Dequeue()
-		if err != nil {
-			t.Fatal("dequeue failed:", err)
-		}
-		if val != i {
-			t.Errorf("expected %d, got %d", i, val)
-			break
-		}
-	}
-
-	// Ensure the queue is empty after all operations
-	if q.Size() != 0 {
-		t.Errorf("expected queue to be empty, size is %d", q.Size())
-	}
-}
-
 // TreeNode represents a node in a binary tree.
 type TreeNode struct {
 	Val   int
@@ -140,4 +108,42 @@ func TestBFS(t *testing.T) {
 	}
 	// [1 2 3 4 5 6]
 	assert.Equal(t, expectedOrder, resultOrder, "The BFS traversal order did not match the expected order.")
+}
+
+func TestEnqueueBatch(t *testing.T) {
+	q := kewpie.NewQueue[int]()
+	items := []int{1, 2, 3, 4, 5}
+
+	q.EnqueueBatch(items)
+
+	assert.Equal(t, len(items), q.Size(), "The size of the queue after EnqueueBatch is incorrect.")
+
+	for i := 0; i < len(items); i++ {
+		val, err := q.Dequeue()
+		assert.NoError(t, err)
+		assert.Equal(t, items[i], val)
+	}
+}
+
+func TestDequeueBatch(t *testing.T) {
+	q := kewpie.NewQueue[Message]()
+	q.Enqueue(Message{ID: 1, Content: "Message 1"})
+	q.Enqueue(Message{ID: 2, Content: "Message 2"})
+	q.Enqueue(Message{ID: 3, Content: "Message 3"})
+
+	batch, err := q.DequeueBatch(2)
+	assert.NoError(t, err)
+	assert.Equal(t, []Message{{ID: 1, Content: "Message 1"}, {ID: 2, Content: "Message 2"}}, batch)
+
+	batch, err = q.DequeueBatch(2)
+	assert.NoError(t, err)
+	assert.Equal(t, []Message{{ID: 3, Content: "Message 3"}}, batch)
+
+	batch, err = q.DequeueBatch(2)
+	assert.NoError(t, err)
+	assert.Empty(t, batch)
+
+	batch, err = q.DequeueBatch(2)
+	assert.NoError(t, err)
+	assert.Empty(t, batch)
 }

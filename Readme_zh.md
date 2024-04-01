@@ -145,19 +145,29 @@ func main() {
 ## 基准测试
 
 ```sh
-go test -bench=. github.com/mips171/kewpie -benchmem
+go test -bench=. github.com/mips171/kewpie  -benchmem -benchtime=100x
 ```
-
+此输出表明，当使用大批量大小（介于 10,000 和 100,000 之间）时，使用具有适当批量大小的函数的 Batch 版本（EnqueueBatch/DequeueBatch）会更有效，以减少 Go 所需的分配数量。
 输出：
 
 ```sh
 goos: darwin
 goarch: arm64
 pkg: github.com/mips171/kewpie
-BenchmarkEnqueue-10     176774624                6.216 ns/op          24 B/op          0 allocs/op
-BenchmarkDequeue-10     68080922                17.43 ns/op           15 B/op          0 allocs/op
+BenchmarkDequeue100-10            883976              1241 ns/op            1024 B/op          7 allocs/op
+BenchmarkDequeue1000-10           160986              7564 ns/op            8192 B/op         10 allocs/op
+BenchmarkDequeue10000-10           17779             66683 ns/op          131072 B/op         14 allocs/op
+BenchmarkDequeue100000-10           1732            600582 ns/op         1048578 B/op         17 allocs/op
+BenchmarkDequeue1000000-10           225           5334549 ns/op         8388608 B/op         20 allocs/op
+BenchmarkDequeue10000000-10           20          56733639 ns/op        134217728 B/op        24 allocs/op
+BenchmarkEnqueue100-10           1410488               899.8 ns/op          3045 B/op          0 allocs/op
+BenchmarkEnqueue1000-10           153046              8176 ns/op           28063 B/op          0 allocs/op
+BenchmarkEnqueue10000-10           18339             69712 ns/op          234198 B/op          0 allocs/op
+BenchmarkEnqueue100000-10           1761            654575 ns/op         2438936 B/op          0 allocs/op
+BenchmarkEnqueue1000000-10           198           6334775 ns/op        21691754 B/op          0 allocs/op
+BenchmarkEnqueue10000000-10           18          62212893 ns/op        238609310 B/op         1 allocs/op
 PASS
-ok      github.com/mips171/kewpie       20.812s
+ok      github.com/mips171/kewpie       220.549s
 ```
 
 # 贡献
